@@ -221,7 +221,7 @@ void Game::Run() {
         BeginDrawing();
         RandomColors();
         ClearBackground(DARKGRAY);
-
+            Color colorLookup[] = { RED, ORANGE, YELLOW, PINK, DARKPURPLE, BLUE, GREEN, TRANSPARENT };
         if (!gameOver && !gameWon) {
             ColorPicker();
             DrawInterface();
@@ -229,7 +229,7 @@ void Game::Run() {
             DrawCorrection();
 
             if (colorMatrix[tries][0] != 7 && colorMatrix[tries][1] != 7 && colorMatrix[tries][2] != 7 && colorMatrix[tries][3] != 7) {
-                if (IsKeyPressed(KEY_ENTER)) {
+                if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE)) {
                     tries++;
                     bool win = true;
                     for (int i = 0; i < 4; ++i) {
@@ -250,9 +250,11 @@ void Game::Run() {
         else {
             if (gameOver) {
                 DrawText("Game Over!", GetScreenWidth() / 2 - MeasureText("Game Over!", 40) / 2, GetScreenHeight() / 2 - 50, 40, RED);
+                
             }
             else if (gameWon) {
                 DrawText("You Win!", GetScreenWidth() / 2 - MeasureText("You Win!", 40) / 2, GetScreenHeight() / 2 - 50, 40, GREEN);
+                
             }
 
             // Desenha as cores correspondentes aos números na matriz answer
@@ -263,6 +265,22 @@ void Game::Run() {
             for (int i = 0; i < 4; ++i) {
                 DrawRectangle(offsetX + i * spacing, offsetY, 40, 40, colors[answer[i]]);
                 DrawRectangleLines(offsetX + i * spacing, offsetY, 40, 40, BLACK);
+            }
+
+
+            for (int row = 0; row < 10; ++row) {
+                for (int col = 0; col < 4; ++col) {
+                    int centerX = GetScreenWidth() / 2 - 50 + col * 25 + 25 / 2;
+                    int centerY = GetScreenHeight() / 22 + row * 25 + 25 / 2;
+
+                    int colorIndex = colorMatrix[row][col];
+                    if (colorIndex >= 0 && colorIndex < sizeof(colorLookup) / sizeof(colorLookup[0])) {
+                        DrawCircle(centerX, centerY, 10, colorLookup[colorIndex]);
+
+
+
+                    }
+                }
             }
 
             std::string attemptsText = "Attempts: " + std::to_string(tries);
